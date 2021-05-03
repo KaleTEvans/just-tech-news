@@ -1,0 +1,61 @@
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/connection');
+
+// create our User model
+class User extends Model {}
+
+// define table colimns and configuration
+User.init(
+    {
+        // define an id column
+        id: {
+            // use the special sequielize datatypes
+            type: DataTypes.INTEGER,
+            // not null
+            allowNull: false,
+            // primary key
+            primaryKey: true,
+            // auto increment
+            autoIncrement: true
+        },
+        // define a username column
+        username: {
+        type: DataTypes.STRING,
+        allowNull: false
+        },
+        // define an email column
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            // no duplicates
+            unique: true,
+            // validate
+            validate: {
+                isEmail: true
+            }
+        },
+        // define a password column
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                // must be 4 characters long
+                len: [4]
+            }
+        }
+    },
+    {
+        // pass in imported sequelize connection
+        sequelize,
+        // dont automatically create createdAt/updatedAt time fields
+        timestamps: false,
+        // dont pluralize name of db table
+        freezeTableName: true,
+        // use underscores
+        underscored: true,
+        // make it so model name stays lowercase in db
+        modelName: 'user'
+    }
+);
+
+module.exports = User;
