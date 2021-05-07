@@ -26,8 +26,8 @@ User.init(
         },
         // define a username column
         username: {
-        type: DataTypes.STRING,
-        allowNull: false
+            type: DataTypes.STRING,
+            allowNull: false
         },
         // define an email column
         email: {
@@ -53,7 +53,7 @@ User.init(
     {
         hooks: {
             // set up beforeCreate lifecycle
-            async beforeCreate(userData) {
+            async beforeCreate(newUserData) {
                 newUserData.password = await bcrypt.hash(newUserData.password, 10);
                 return newUserData;
             },
