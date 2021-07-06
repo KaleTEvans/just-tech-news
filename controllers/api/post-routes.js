@@ -81,7 +81,7 @@ router.post('/', (req, res) => {
     Post.create({
         title: req.body.title,
         post_url: req.body.post_url,
-        user_id: req.body.user_id
+        user_id: req.session.user_id
     })
     .then(dbPostData => res.json(dbPostData))
     .catch(err => {
@@ -92,10 +92,14 @@ router.post('/', (req, res) => {
 
 // PUT /api/posts/upvote
 router.put('/upvote', (req, res) => {
+  // make sure the session exists first
+  if (req.session) {
+    // pass session id 
     // custon static method
-    Post.upvote(req.body, { Vote })
-    .then(updatedPostData => res.json(updatedPostData))
+    Post.upvote({ ...req.body, user_id: req.session.user_id }, { Vote, Comment, User })
+    .then(updatedVotetData => res.json(updatedVotetData))
     .catch(err => res.json(err));
+  }
 });
 
 router.put('/:id', (req, res) => {
